@@ -515,6 +515,23 @@ class HostgroupTest < ActiveSupport::TestCase
     assert_includes hostgroup.errors.keys, :subnet6
   end
 
+  describe '#environment' do
+    setup do
+      @hostgroup       = FactoryGirl.create(:hostgroup, :with_puppetclass)
+      @new_environment = FactoryGirl.create(:environment)
+    end
+
+    test 'changing it should preserve puppetclasses' do
+      puppetclasses = @hostgroup.puppetclasses.all
+      old_environment = @hostgroup.environment
+
+      @hostgroup.update(environment: @new_environment)
+
+      assert_equal puppetclasses, @hostgroup.puppetclasses.all
+      refute_equal old_environment, @hostgroup.environment
+    end
+  end
+
   private
 
   def setup_user(operation)
