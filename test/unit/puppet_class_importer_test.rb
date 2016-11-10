@@ -80,6 +80,15 @@ class PuppetClassImporterTest < ActiveSupport::TestCase
       @importer.stubs(:ignored_classes).returns([Regexp.new(/^ignored-class$/)])
       assert_equal ['ignored-class'], @importer.ignored_classes_for(@environment)
     end
+
+    context 'a spcefific environment is set' do
+      test "should contain only the specified environment in changes" do
+        importer = PuppetClassImporter.new(url: @proxy.url, env: 'foreman-testing')
+
+        assert importer.changes['new'].include?('foreman-testing')
+        assert !importer.changes['new'].include?('foreman-testing-1')
+      end
+    end
   end
 
   test "should return list of envs" do
