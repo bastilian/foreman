@@ -50,10 +50,12 @@ class PuppetClassImporter
     new_classes     = new_classes_for(environment)
     old_classes     = removed_classes_for(environment)
     updated_classes = updated_classes_for(environment)
+    ignored_classes = ignored_classes_for(environment)
 
     changes['new'][environment] = new_classes if new_classes.any?
     changes['obsolete'][environment] = old_classes if old_classes.any?
     changes['updated'][environment] = updated_classes if updated_classes.any?
+    changes['ignored'][environment] = ignored_classes if ignored_classes.any?
   end
 
   # Update the environments and puppetclasses based upon the user's selection
@@ -103,6 +105,15 @@ class PuppetClassImporter
         compare_classes(environment, db_class.name, params)
       end.compact
     ]
+  end
+
+  # Gives back the classes ignored for a given environment
+  #
+  # Params:
+  #  * ++environment++:: {String} name of the environment
+  #
+  def ignored_classes_for(environment)
+    {}
   end
 
   # This method check if the puppet class exists in this environment, and compare the class params.
