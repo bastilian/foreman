@@ -113,7 +113,21 @@ class PuppetClassImporter
   #  * ++environment++:: {String} name of the environment
   #
   def ignored_classes_for(environment)
-    {}
+    classes = proxy.classes(environment)
+    classes.keys.select do |class_name|
+      ignored_class?(class_name)
+    end
+  end
+
+  # Returns true when the class name matches any pattern in ignored_classes
+  #
+  # Params:
+  #  * ++class_name++:: {String} containing the class to be checked
+  #
+  def ignored_class?(class_name)
+    !ignored_classes.select do |filter|
+      filter =~ class_name
+    end.empty?
   end
 
   # This method check if the puppet class exists in this environment, and compare the class params.

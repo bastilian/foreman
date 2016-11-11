@@ -62,6 +62,25 @@ class PuppetClassImporterTest < ActiveSupport::TestCase
     end
   end
 
+  describe '#ignored_classes_for' do
+    setup do
+      @proxy = smart_proxies(:puppetmaster)
+      classes = {
+        'ignored-class' => {},
+        'not-ignored-class' => {}
+      }
+      @proxy_api = ProxyAPI::Puppet.new(:url => @proxy.url)
+      @proxy_api.stubs(:classes).returns(classes)
+      @importer = PuppetClassImporter.new(proxy: @proxy_api)
+      @environment = 'foreman-testing'
+    end
+
+    test 'returns an array of classes' do
+      @importer.stubs(:ignored_classes).returns([Regexp.new(/^ignored-class$/)])
+      assert_equal ['ignored-class'], @importer.ignored_classes_for(@environment)
+    end
+  end
+
   test "should return list of envs" do
     assert_kind_of Array, get_an_instance.db_environments
   end
