@@ -21,7 +21,12 @@ module Foreman::Controller::Environments
     if @changed["new"].size > 0 || @changed["obsolete"].size > 0 || @changed["updated"].size > 0
       render "common/_puppetclasses_or_envs_changed"
     else
-      notice _("No changes to your environments detected")
+      notice_message = _("No changes to your environments detected")
+      if !@changed['ignored'].empty?
+        notice_message << "\n"
+        notice_message << _("Ignored Environments: %s") % @changed['ignored'].keys.join(', ')
+      end
+      notice(notice_message)
       redirect_to :controller => controller_path
     end
   end
