@@ -253,6 +253,7 @@ class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
       ProxyAPI::Puppet.any_instance.stubs(:environments).returns(["env1", "env2"])
       classes_env1 = {'a' => Foreman::ImporterPuppetclass.new('name' => 'a')}
       classes_env2 = {'b' => Foreman::ImporterPuppetclass.new('name' => 'b')}
+      ProxyAPI::Puppet.any_instance.stubs(:classes).returns(classes_env1.merge(classes_env2))
       ProxyAPI::Puppet.any_instance.stubs(:classes).with('env1').returns(classes_env1)
       ProxyAPI::Puppet.any_instance.stubs(:classes).with('env2').returns(classes_env2)
     end
@@ -273,6 +274,21 @@ class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
         assert_includes Puppetclass.pluck(:name), 'b'
       end
       assert_response :success
+    end
+
+    test 'should contain ignored environments' do
+      setup_import_classes
+      env_name = 'env1'
+      PuppetClassImporter.any_instance.stubs(:ignored_environments).returns([env_name])
+
+      as_admin do
+        post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id}, set_session_user
+
+        assert_response :success
+        response = ActiveSupport::JSON.decode(@response.body)
+        puts response.inspect
+        assert_equal env_name, response['results'][0]['ignored_environment']
+      end
     end
   end
 

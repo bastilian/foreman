@@ -224,18 +224,4 @@ class Api::V1::SmartProxiesControllerTest < ActionController::TestCase
       assert_equal env_name, response['results']['name']
     end
   end
-
-  test 'should contain ignored environments' do
-    setup_import_classes
-    env_name = 'env1'
-    PuppetClassImporter.any_instance.stubs(:ignored_environments).returns([env_name])
-
-    as_admin do
-      post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id}, set_session_user
-
-      assert_response :success
-      response = ActiveSupport::JSON.decode(@response.body)
-      assert_equal env_name, response['results'][0]['ignored_environment']
-    end
-  end
 end
