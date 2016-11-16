@@ -258,6 +258,13 @@ class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
       ProxyAPI::Puppet.any_instance.stubs(:classes).with('env2').returns(classes_env2)
     end
 
+    test 'should render templates according to api version 2' do
+      as_admin do
+        post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id}, set_session_user
+        assert_template "api/v2/import_puppetclasses/index"
+      end
+    end
+
     test "should import puppetclasses for specified environment only" do
       assert_difference('Puppetclass.count', 1) do
         post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id, :environment_id => 'env1'}, set_session_user
@@ -283,10 +290,8 @@ class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
 
       as_admin do
         post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id}, set_session_user
-
         assert_response :success
         response = ActiveSupport::JSON.decode(@response.body)
-        puts response.inspect
         assert_equal env_name, response['results'][0]['ignored_environment']
       end
     end
