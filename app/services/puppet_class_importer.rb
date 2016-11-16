@@ -133,9 +133,9 @@ class PuppetClassImporter
   #  * +class_name+: {String} containing the class to be checked
   #
   def ignored_class?(class_name)
-    !ignored_classes.select do |filter|
-      filter =~ class_name
-    end.empty?
+    ignored_classes.any? do |filter|
+      filter.is_a?(Regexp) && filter =~ class_name
+    end
   end
 
   # This method check if the puppet class exists in this environment, and compare the class params.
