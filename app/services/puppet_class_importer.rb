@@ -43,8 +43,8 @@ class PuppetClassImporter
   # Adds class changes of an environment to a changes hash in new, obsolete and updated
   #
   # Params:
-  #  * ++environment++:: {String} of environments name
-  #  * ++changes++:: {Hash} to add changes to
+  #  * +environment+: {String} of environments name
+  #  * +changes+: {Hash} to add changes to
   #
   def changes_for_environment(environment, changes)
     new_classes     = new_classes_for(environment)
@@ -110,7 +110,7 @@ class PuppetClassImporter
   # Gives back the classes ignored for a given environment
   #
   # Params:
-  #  * ++environment++:: {String} name of the environment
+  #  * +environment+: {String} name of the environment
   #
   def ignored_classes_for(environment)
     classes = proxy.classes(environment)
@@ -122,7 +122,7 @@ class PuppetClassImporter
   # Returns true when the class name matches any pattern in ignored_classes
   #
   # Params:
-  #  * ++class_name++:: {String} containing the class to be checked
+  #  * +class_name+: {String} containing the class to be checked
   #
   def ignored_class?(class_name)
     !ignored_classes.select do |filter|
@@ -185,6 +185,11 @@ class PuppetClassImporter
     db_classes(environment).map(&:name)
   end
 
+  # Returns an {Hash} of puppet class names without ignored classes
+  #
+  # Params:
+  #  * +environment+: {String} containing the environment name
+  #
   def actual_classes(environment)
     @proxy_classes[environment] ||= proxy.classes(environment).reject do |key, value|
       ignored_classes.find { |filter| filter.is_a?(Regexp) && filter =~ key }
