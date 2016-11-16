@@ -199,9 +199,7 @@ class PuppetClassImporter
   #  * +environment+: {String} containing the environment name
   #
   def actual_classes(environment)
-    @proxy_classes[environment] ||= proxy.classes(environment).reject do |key, value|
-      ignored_classes.find { |filter| filter.is_a?(Regexp) && filter =~ key }
-    end
+    proxy_classes_for(environment).reject { |key, _| ignored_class? key }
   end
 
   def actual_classes_name(environment)
