@@ -23,6 +23,11 @@ module Foreman::Controller::Environments
     else
       notice_message = _("No changes to your environments detected")
       list_ignored(notice_message, @changed['ignored']) if @changed['ignored'].present?
+
+      if @changed['ignored'].present?
+        notice_message << "\n" + _("Ignored environments: %s") % @changed['ignored'].keys.to_sentence
+      end
+
       notice(notice_message)
       redirect_to :controller => controller_path
     end
