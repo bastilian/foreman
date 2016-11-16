@@ -26,9 +26,10 @@ class PuppetClassImporterTest < ActiveSupport::TestCase
     context 'a sepecific environment is set' do
       test "should contain only the specified environment in changes" do
         importer = PuppetClassImporter.new(url: @proxy.url, env: 'foreman-testing')
+        changes = importer.changes['new']
 
-        assert importer.changes['new'].include?('foreman-testing')
-        assert !importer.changes['new'].include?('foreman-testing-1')
+        assert_includes changes, 'foreman-testing'
+        refute_includes changes, 'foreman-testing-1'
       end
     end
 
