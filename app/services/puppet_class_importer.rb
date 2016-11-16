@@ -43,8 +43,8 @@ class PuppetClassImporter
   # Adds class changes of an environment to a changes hash in new, obsolete and updated
   #
   # Params:
-  #  * ++environment++:: {String} of environments name
-  #  * ++changes++:: {Hash} to add changes to
+  #  * +environment+: {String} of environments name
+  #  * +changes+: {Hash} to add changes to
   #
   def changes_for_environment(environment, changes)
     new_classes     = new_classes_for(environment)
