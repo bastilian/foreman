@@ -163,7 +163,7 @@ class EnvironmentsControllerTest < ActionController::TestCase
     PuppetClassImporter.any_instance.stubs(:ignored_environments).returns(["env1","env2","env3"])
     get :import_environments, {:proxy => smart_proxies(:puppetmaster)}, set_session_user
 
-    assert_equal "No changes to your environments detected", flash[:notice]
+    assert_equal "No changes to your environments detected\nIgnored environments: env1, env2, and env3", flash[:notice]
   end
 
   def setup_user
