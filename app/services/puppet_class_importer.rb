@@ -84,6 +84,15 @@ class PuppetClassImporter
     #  [e.to_s]
   end
 
+  # Returns all classes for a given environment
+  #
+  # Params:
+  #  * +environment+: {String} containing the name of the environment
+  #
+  def proxy_classes_for(environment)
+    @proxy_classes[environment] ||= proxy.classes(environment)
+  end
+
   def new_classes_for(environment)
     old_classes = db_classes_name(environment)
     HashWithIndifferentAccess[
@@ -113,8 +122,7 @@ class PuppetClassImporter
   #  * +environment+: {String} name of the environment
   #
   def ignored_classes_for(environment)
-    classes = proxy.classes(environment)
-    classes.keys.select do |class_name|
+    proxy_classes_for(environment).keys.select do |class_name|
       ignored_class?(class_name)
     end
   end
