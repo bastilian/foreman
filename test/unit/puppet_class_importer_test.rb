@@ -23,7 +23,7 @@ class PuppetClassImporterTest < ActiveSupport::TestCase
       @proxy = smart_proxies(:puppetmaster)
     end
 
-    context 'a spcefific environment is set' do
+    context 'a sepecific environment is set' do
       test "should contain only the specified environment in changes" do
         importer = PuppetClassImporter.new(url: @proxy.url, env: 'foreman-testing')
 
