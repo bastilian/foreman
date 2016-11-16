@@ -22,10 +22,11 @@ module Foreman::Controller::Environments
       render "common/_puppetclasses_or_envs_changed"
     else
       notice_message = _("No changes to your environments detected")
-      if !@changed['ignored'].empty?
-        notice_message << "\n"
-        notice_message << _("Ignored Environments: %s") % @changed['ignored'].keys.join(', ')
+
+      if @changed['ignored'].present?
+        notice_message << "\n" + _("Ignored environments: %s") % @changed['ignored'].keys.to_sentence
       end
+
       notice(notice_message)
       redirect_to :controller => controller_path
     end
