@@ -225,8 +225,9 @@ class Api::V1::SmartProxiesControllerTest < ActionController::TestCase
     end
   end
 
-  test 'should render templates according to api version 2' do
+  test 'should render templates according to api version 1' do
     setup_import_classes
+
     as_admin do
       post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id}, set_session_user
       assert_template "api/v1/import_puppetclasses/index"
