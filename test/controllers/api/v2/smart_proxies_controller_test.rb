@@ -295,6 +295,19 @@ class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
         assert_equal env_name, response['results'][0]['ignored_environment']
       end
     end
+
+    test 'should contain ignored puppet_classes' do
+      setup_import_classes
+      PuppetClassImporter.any_instance.stubs(:ignored_classes).returns([/^a$/])
+
+      as_admin do
+        post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id}, set_session_user
+        assert_response :success
+        response = ActiveSupport::JSON.decode(@response.body)
+        assert_includes response['results'][0]['ignored_puppetclasses'], 'a'
+        refute_includes response['results'][0]['ignored_puppetclasses'], 'c'
+      end
+    end
   end
 
   test "smart proxy version succeeded" do
