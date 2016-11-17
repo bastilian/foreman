@@ -166,6 +166,18 @@ class EnvironmentsControllerTest < ActionController::TestCase
     assert_equal "No changes to your environments detected\nIgnored environments: env1, env2, and env3", flash[:notice]
   end
 
+  test "should obey puppet class filters in config/ignored_environments.yml" do
+    setup_import_classes
+    PuppetClassImporter.any_instance.stubs(:updated_classes_for).returns([])
+    PuppetClassImporter.any_instance.stubs(:removed_classes_for).returns([])
+
+    PuppetClassImporter.any_instance.stubs(:ignored_environments).returns([])
+    PuppetClassImporter.any_instance.stubs(:ignored_classes).returns([/^a$/])
+    get :import_environments, {:proxy => smart_proxies(:puppetmaster)}, set_session_user
+
+    assert_equal "No changes to your environments detected\nIgnored classes in the environments: env1 and env2", flash[:notice]
+  end
+
   def setup_user
     @request.session[:user] = users(:one).id
     users(:one).roles       = [Role.default, Role.find_by_name('Viewer')]
