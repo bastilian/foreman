@@ -338,6 +338,12 @@ $(function() {
   });
 });
 
+function check_for_unavailable_puppetclasses() {
+  if ($('#puppet_klasses #selected_classes .unavailable').size() > 0) {
+    notify('<span>' + __('Some Puppet Classes are unavailable in the selected environment') + '</span>', 'warning')
+  }
+}
+
 function update_puppetclasses(element) {
   var host_id = $("form").data('id');
   var url = $(element).attr('data-url');
@@ -359,6 +365,7 @@ function update_puppetclasses(element) {
       $('#puppet_klasses').html(request);
       reload_puppetclass_params();
       tfm.tools.activateTooltips();
+      check_for_unavailable_puppetclasses();
     },
     complete: function() {
       reloadOnAjaxComplete(element);
