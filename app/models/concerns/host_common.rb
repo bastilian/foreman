@@ -219,7 +219,7 @@ module HostCommon
                   end
     root_object = root_object.with_possible_environments if with_environments
 
-    root_object.where(conditions)
+    root_object.where(conditions).uniq
   end
 
   def available_puppetclasses
