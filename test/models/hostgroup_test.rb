@@ -262,6 +262,40 @@ class HostgroupTest < ActiveSupport::TestCase
     assert_empty hostgroup.parent_config_groups
   end
 
+  describe '#individual_puppetclasses' do
+    setup do
+      @hostgroup = FactoryGirl.create(:hostgroup, :with_puppetclass)
+      @puppetclass = @hostgroup.puppetclasses.first
+    end
+
+    context 'has NOT set an environment' do
+      test 'returns all classes' do
+        assert_includes @hostgroup.individual_puppetclasses.all, @puppetclass
+      end
+    end
+
+    context 'has an environment set' do
+      setup do
+        @environment = environments(:production)
+        @puppetclass.environments << @environment
+        @other_puppetclass = FactoryGirl.create(:puppetclass)
+        @hostgroup.puppetclasses << @other_puppetclass
+        @hostgroup.stubs(:environment).returns(@environment)
+      end
+
+      test 'returns classes only in the environment by default' do
+        assert_includes @hostgroup.individual_puppetclasses, @puppetclass
+        refute_includes @hostgroup.individual_puppetclasses, @other_puppetclass
+      end
+
+      context 'in_environment is false' do
+        test 'it returns all classes including ones not in the current environment' do
+          assert_equal @hostgroup.individual_puppetclasses(in_environment: false).count, @hostgroup.puppetclasses.count
+        end
+      end
+    end
+  end
+
   test "individual puppetclasses added to hostgroup (that can be removed) does not include classes that are included by config group" do
     hostgroup = hostgroups(:parent)
     # update parent to production environment

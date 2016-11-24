@@ -41,7 +41,10 @@ class Puppetclass < ActiveRecord::Base
   scoped_search :relation => :class_params, :on => :key, :complete_value => :true, :only_explicit => true
 
   scope :not_in_any_environment, -> { includes(:environment_classes).where(:environment_classes => {:environment_id => nil}) }
-
+  scope :with_possible_environments, -> {
+    joins('LEFT OUTER JOIN environment_classes ON puppetclasses.id = environment_classes.puppetclass_id
+           LEFT OUTER JOIN environments ON environment_classes.environment_id = environments.id')
+  }
   # returns a hash containing modules and associated classes
   def self.classes2hash(classes)
     hash = {}
