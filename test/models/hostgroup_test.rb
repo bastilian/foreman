@@ -287,12 +287,6 @@ class HostgroupTest < ActiveSupport::TestCase
         assert_includes @hostgroup.individual_puppetclasses, @puppetclass
         refute_includes @hostgroup.individual_puppetclasses, @other_puppetclass
       end
-
-      context 'in_environment is false' do
-        test 'it returns all classes including ones not in the current environment' do
-          assert_equal @hostgroup.individual_puppetclasses(in_environment: false).count, @hostgroup.puppetclasses.count
-        end
-      end
     end
   end
 

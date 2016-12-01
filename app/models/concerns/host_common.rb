@@ -202,22 +202,16 @@ module HostCommon
   end
 
   # Returns PuppetClasses of a Host or Hostgroup
-  #
-  # Params:
-  #  * +with_environments+: {Boolean} if possible environments should be included
-  #  * +in_environments+: {Boolean} to consider only classes in environments
-  #
-  def individual_puppetclasses(with_environments: false, in_environment: true)
+  def individual_puppetclasses
     ids = host_class_ids - cg_class_ids
     return puppetclasses if ids.blank? && new_record?
 
     conditions = {:id => ids}
-    root_object = if in_environment && environment
+    root_object = if environment
                     environment.puppetclasses
                   else
-                    Puppetclass
+                    Puppetclass.with_possible_environments
                   end
-    root_object = root_object.with_possible_environments if with_environments
 
     root_object.where(conditions).uniq
   end
