@@ -340,7 +340,7 @@ $(function() {
 
 function check_for_unavailable_puppetclasses() {
   if ($('#puppet_klasses #selected_classes .unavailable').size() > 0) {
-    notify('<span>' + __('Some Puppet Classes are unavailable in the selected environment') + '</span>', 'warning')
+    notify('<span>' + __('Some Puppet classes are unavailable in the selected environment') + '</span>', 'warning')
   }
 }
 
