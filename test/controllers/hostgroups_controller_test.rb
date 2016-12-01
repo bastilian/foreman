@@ -161,6 +161,7 @@ class HostgroupsControllerTest < ActionController::TestCase
 
       post :environment_selected, @params, set_session_user
       assert_equal(1, (assigns(:hostgroup).puppetclasses.length))
+      assert_include assigns(:hostgroup).puppetclasses, @puppetclass
     end
 
     context 'no environment_id param is set' do
