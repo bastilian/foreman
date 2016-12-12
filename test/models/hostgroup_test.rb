@@ -283,21 +283,21 @@ class HostgroupTest < ActiveSupport::TestCase
         @hostgroup.stubs(:environment).returns(@environment)
       end
 
-      test 'returns classes only in the environment by default' do
+      test 'returns classes regardless of environment by default' do
         assert_includes @hostgroup.individual_puppetclasses, @puppetclass
-        refute_includes @hostgroup.individual_puppetclasses, @other_puppetclass
+        assert_includes @hostgroup.individual_puppetclasses, @other_puppetclass
       end
     end
-  end
 
-  test "individual puppetclasses added to hostgroup (that can be removed) does not include classes that are included by config group" do
-    hostgroup = hostgroups(:parent)
-    # update parent to production environment
-    hostgroup.update_attribute(:environment_id, environments(:production).id)
-    # nagios puppetclasses(:five) is also in config_groups(:one) Monitoring
-    hostgroup.puppetclasses << puppetclasses(:five)
-    assert_equal ['git', 'nagios'].sort, hostgroup.puppetclasses.map(&:name).sort
-    assert_equal [], hostgroup.individual_puppetclasses.map(&:name)
+    test "individual puppetclasses added to hostgroup (that can be removed) does not include classes that are included by config group" do
+      hostgroup = hostgroups(:parent)
+      class_in_group = puppetclasses(:five)
+      hostgroup.stubs(:cg_class_ids).returns([class_in_group.id])
+      hostgroup.puppetclasses << class_in_group
+
+      assert_includes hostgroup.puppetclasses, class_in_group
+      refute_includes hostgroup.individual_puppetclasses, class_in_group
+    end
   end
 
   test "available_puppetclasses should return all if no environment" do

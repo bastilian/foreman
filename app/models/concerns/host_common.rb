@@ -201,19 +201,17 @@ module HostCommon
     end
   end
 
-  # Returns PuppetClasses of a Host or Hostgroup
+  # Returns Puppetclasses of a Host or Hostgroup
+  #
+  # It does not include Puppetclasses of it's ConfigGroupClasses
+  #
   def individual_puppetclasses
     ids = host_class_ids - cg_class_ids
     return puppetclasses if ids.blank? && new_record?
 
     conditions = {:id => ids}
-    root_object = if environment
-                    environment.puppetclasses
-                  else
-                    Puppetclass.with_possible_environments
-                  end
-
-    root_object.where(conditions).uniq
+    Puppetclass.with_possible_environments
+               .where(conditions).uniq
   end
 
   def available_puppetclasses
