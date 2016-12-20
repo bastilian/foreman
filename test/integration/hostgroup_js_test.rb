@@ -60,7 +60,6 @@ class HostgroupJSTest < IntegrationTestWithJavascript
         end
       end
     end
-
   end
 
   test 'submit updates taxonomy' do
