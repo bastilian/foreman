@@ -44,7 +44,7 @@ class HostgroupJSTest < IntegrationTestWithJavascript
 
       describe 'Host Group tab' do
         test 'it shows a warning' do
-          click_link 'Host Group'
+          click_link 'Hostgroup'
           wait_for_ajax
 
           assert page.has_selector?('#puppetclasses_unavaliable_warning')
@@ -89,7 +89,7 @@ class HostgroupJSTest < IntegrationTestWithJavascript
     click_link 'Parameters'
     assert page.has_no_selector?("#inherited_parameters #name_x")
 
-    click_link 'Host Group'
+    click_link 'Hostgroup'
     select2(group.name, :from => 'hostgroup_parent_id')
     wait_for_ajax
 
