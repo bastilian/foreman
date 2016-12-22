@@ -208,10 +208,7 @@ module HostCommon
   def individual_puppetclasses
     ids = host_class_ids - cg_class_ids
     return puppetclasses if ids.blank? && new_record?
-
-    conditions = {:id => ids}
-    Puppetclass.with_possible_environments
-               .where(conditions).uniq
+    Puppetclass.includes(:environments).where(id: ids)
   end
 
   def available_puppetclasses
