@@ -347,7 +347,7 @@ function check_for_unavailable_puppetclasses() {
   if (unavailable_classes.size() > 0) {
     var warning = '<span id="puppetclasses_unavaliable_warning"><span class="pficon pficon-warning-triangle-o"></span> ' +
                   Jed.sprintf(__('Some %s are unavailable in the selected environment'),
-                              '<a href="#puppet_klasses">Puppet classes</a>') + '</span>';
+                              '<a href="#puppet_klasses">Puppet Classes</a>') + '</span>';
     help_block.append(warning).find('a').on('click', function (event) {
       event.preventDefault();
       var tab = $(event.target).closest('form').find('.nav-tabs a[href="#puppet_klasses"]');
