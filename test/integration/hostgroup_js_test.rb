@@ -53,7 +53,7 @@ class HostgroupJSTest < IntegrationTestWithJavascript
 
       describe 'Puppet classes tab' do
         test 'it marks selected classes as unavailable' do
-          click_link 'Puppet Classes'
+          page.find('#puppetclasses_unavaliable_warning').click_link 'Puppet Classes'
           wait_for_ajax
 
           assert page.has_selector?('.selected_puppetclass.unavailable')
