@@ -2,13 +2,12 @@ jest.unmock('./foreman_hostgroups');
 const hostgroups = require('./foreman_hostgroups');
 const $ = require('jquery');
 
-describe('check_for_unavailable_puppetclasses', () => {
+describe('checkForUnavailablePuppetclasses', () => {
   beforeEach(() => {
-    window.Jed = { sprintf: function (input) { return input; } }
+    window.Jed = { sprintf: function (input) { return input; } };
     window.__ = function (input) { return input; };
 
-    document.body.innerHTML =
-      `<div>
+    document.body.innerHTML = `<div>
         <ul class="nav-tabs">
           <li><a href="#puppet_klasses" data-toggle="tab">Puppet Classes</a></li>
         </ul>
@@ -27,7 +26,7 @@ describe('check_for_unavailable_puppetclasses', () => {
             </div>
           </form>
         </div>
-      </div>`
+      </div>`;
   });
 
   it('adds a warning if an unavailable class is found', () => {
@@ -42,6 +41,6 @@ describe('check_for_unavailable_puppetclasses', () => {
     $('#selected_classes').empty();
 
     hostgroups.check_for_unavailable_puppetclasses();
-    expect($('#hostgroup .help-block').first().children().size()).toBe(0)
+    expect($('#hostgroup .help-block').first().children().size()).toBe(0);
   });
-})
+});
