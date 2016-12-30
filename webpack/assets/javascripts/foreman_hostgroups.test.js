@@ -32,7 +32,7 @@ describe('checkForUnavailablePuppetclasses', () => {
   it('adds a warning if an unavailable class is found', () => {
     $('#selected_classes').append('<li class="unavailable">Unavailable Class</li>');
 
-    hostgroups.check_for_unavailable_puppetclasses();
+    hostgroups.checkForUnavailablePuppetclasses();
     expect($('#hostgroup .help-block').first().children().size()).toBe(1);
   });
 
@@ -40,7 +40,7 @@ describe('checkForUnavailablePuppetclasses', () => {
     $('#hostgroup .help-block').empty();
     $('#selected_classes').empty();
 
-    hostgroups.check_for_unavailable_puppetclasses();
+    hostgroups.checkForUnavailablePuppetclasses();
     expect($('#hostgroup .help-block').first().children().size()).toBe(0);
   });
 });
