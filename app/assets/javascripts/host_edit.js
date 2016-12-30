@@ -496,7 +496,7 @@ function load_with_placeholder(target, url, data){
 
 function onHostEditLoad(){
   update_interface_table();
-  check_for_unavailable_puppetclasses();
+  tfm.hostgroups.check_for_unavailable_puppetclasses();
 
   $("#host-conflicts-modal").modal({show: "true", backdrop: "static"});
    $('#host-conflicts-modal').click(function(){
