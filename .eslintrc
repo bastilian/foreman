@@ -17,7 +17,8 @@
     "window": false,
     "$": true,
     "_": true,
-    "__": true
+    "__": true,
+    "Jed": true
   },
 
   "parser": "babel-eslint",
