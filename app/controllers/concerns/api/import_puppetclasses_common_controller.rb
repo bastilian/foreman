@@ -46,7 +46,7 @@ module Api::ImportPuppetclassesCommonController
       if background
         process_success task
       else
-        render("api/v1/import_puppetclasses/#{rabl_template}", :layout => "api/layouts/import_puppetclasses_layout")
+        render("api/v#{api_version}/import_puppetclasses/#{rabl_template}", :layout => "api/layouts/import_puppetclasses_layout")
       end
     rescue ForemanTasks::TaskError => e
       render :json => { :message => _("Failed to update the environments and Puppet classes from the on-disk puppet installation: %s") % e.to_s }, :status => :internal_server_error
