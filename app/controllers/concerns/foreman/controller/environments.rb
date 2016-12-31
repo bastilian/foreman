@@ -9,6 +9,10 @@ module Foreman::Controller::Environments
       opts[:env] = params[:env] unless params[:env].blank?
       @importer = PuppetClassImporter.new(opts)
       @changed  = @importer.changes
+
+      if @importer.ignored_boolean_environment_names?
+        warning(_("Ignored environment names resulting in booleans found. Please quote strings in config/ignored_environments.yml"))
+      end
     rescue => e
       if e.message =~ /puppet feature/i
         error _("No smart proxy was found to import environments from, ensure that at least one smart proxy is registered with the 'puppet' feature.")
@@ -22,11 +26,11 @@ module Foreman::Controller::Environments
       render "common/_puppetclasses_or_envs_changed"
     else
       notice_message = _("No changes to your environments detected")
-      list_ignored(notice_message, @changed['ignored']) if @changed['ignored'].present?
 
       if @changed['ignored'].present?
-        notice_message << "\n" + _("Ignored environments: %s") % @changed['ignored'].keys.to_sentence
+        list_ignored(notice_message, @changed['ignored'])
       end
+
       notice(notice_message)
       redirect_to :controller => controller_path
     end

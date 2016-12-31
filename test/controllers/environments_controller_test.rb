@@ -178,6 +178,14 @@ class EnvironmentsControllerTest < ActionController::TestCase
     assert_equal "No changes to your environments detected\nIgnored classes in the environments: env1 and env2", flash[:notice]
   end
 
+  test 'it adds a warning when boolean keys are found' do
+   setup_import_classes
+   PuppetClassImporter.any_instance.stubs(:ignored_environments).returns(['true'])
+
+   get :import_environments, {:proxy => smart_proxies(:puppetmaster)}, set_session_user
+   assert_equal "Ignored environment names resulting in booleans found. Please quote strings in config/ignored_environments.yml", flash[:warning]
+  end
+
   def setup_user
     @request.session[:user] = users(:one).id
     users(:one).roles       = [Role.default, Role.find_by_name('Viewer')]
