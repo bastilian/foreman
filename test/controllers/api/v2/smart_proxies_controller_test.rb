@@ -243,7 +243,7 @@ class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
     setup_import_classes
     LookupKey.destroy_all
     assert_difference('LookupKey.count', 0) do
-      post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id, :except => 'new,updated'}, set_session_user
+     post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id, :except => 'new,updated'}, set_session_user
     end
     assert_response :success
   end
@@ -283,29 +283,33 @@ class Api::V2::SmartProxiesControllerTest < ActionController::TestCase
       assert_response :success
     end
 
-    test 'should contain ignored environments' do
-      setup_import_classes
-      env_name = 'env1'
-      PuppetClassImporter.any_instance.stubs(:ignored_environments).returns([env_name])
-
-      as_admin do
-        post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id}, set_session_user
-        assert_response :success
-        response = ActiveSupport::JSON.decode(@response.body)
-        assert_equal env_name, response['results'][0]['ignored_environment']
+    context 'ignored entvironments or classes are set' do
+      setup do
+        setup_import_classes
       end
-    end
 
-    test 'should contain ignored puppet_classes' do
-      setup_import_classes
-      PuppetClassImporter.any_instance.stubs(:ignored_classes).returns([/^a$/])
+      test 'should contain ignored environments' do
+        env_name = 'env1'
+        PuppetClassImporter.any_instance.stubs(:ignored_environments).returns([env_name])
 
-      as_admin do
-        post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id}, set_session_user
-        assert_response :success
-        response = ActiveSupport::JSON.decode(@response.body)
-        assert_includes response['results'][0]['ignored_puppetclasses'], 'a'
-        refute_includes response['results'][0]['ignored_puppetclasses'], 'c'
+        as_admin do
+          post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id}, set_session_user
+          assert_response :success
+          response = ActiveSupport::JSON.decode(@response.body)
+          assert_equal env_name, response['results'][0]['ignored_environment']
+        end
+      end
+
+      test 'should contain ignored puppet_classes' do
+        PuppetClassImporter.any_instance.stubs(:ignored_classes).returns([/^a$/])
+
+        as_admin do
+          post :import_puppetclasses, {:id => smart_proxies(:puppetmaster).id}, set_session_user
+          assert_response :success
+          response = ActiveSupport::JSON.decode(@response.body)
+          assert_includes response['results'][0]['ignored_puppetclasses'], 'a'
+          refute_includes response['results'][0]['ignored_puppetclasses'], 'c'
+        end
       end
     end
   end
