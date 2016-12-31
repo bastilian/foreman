@@ -81,14 +81,6 @@ class PuppetClassImporterTest < ActiveSupport::TestCase
       assert_equal ['ignored-class'], @importer.ignored_classes_for(@environment)
     end
 
-    context 'a spcefific environment is set' do
-      test "should contain only the specified environment in changes" do
-        importer = PuppetClassImporter.new(url: @proxy.url, env: 'foreman-testing')
-        assert_includes changes, 'foreman-testing'
-        refute_includes changes, 'foreman-testing-1'
-      end
-    end
-
     context 'has ignored environments' do
       test 'it returns them' do
         importer = PuppetClassImporter.new(url: @proxy.url)
@@ -135,6 +127,24 @@ class PuppetClassImporterTest < ActiveSupport::TestCase
     test 'returns an array of classes' do
       @importer.stubs(:ignored_classes).returns([Regexp.new(/^ignored-class$/)])
       assert_equal ['ignored-class'], @importer.ignored_classes_for(@environment)
+    end
+  end
+
+  describe '#ignored_boolean_environment_names?' do
+    setup do
+      @proxy = smart_proxies(:puppetmaster)
+      @proxy_api = ProxyAPI::Puppet.new(:url => @proxy.url)
+      @importer = PuppetClassImporter.new(proxy: @proxy_api)
+    end
+
+    test 'is true when an environment name is resulting in "true"' do
+      @importer.stubs(:ignored_environments).returns(['true', 'test', 'another'])
+      assert @importer.ignored_boolean_environment_names?
+    end
+
+    test 'is true when an environment name is resulting in "false"' do
+      @importer.stubs(:ignored_environments).returns(['false', 'test'])
+      assert @importer.ignored_boolean_environment_names?
     end
   end
 

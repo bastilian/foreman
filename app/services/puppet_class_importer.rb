@@ -205,6 +205,10 @@ class PuppetClassImporter
     actual_classes(environment).keys
   end
 
+  def ignored_boolean_environment_names?
+    (ignored_environments & ['true', 'false']).any?
+  end
+
   private
 
   attr_reader :proxy
@@ -217,10 +221,16 @@ class PuppetClassImporter
     ignored_file[:filters] || []
   end
 
+  def ignored_file_path
+    File.join(Rails.root.to_s, "config", "ignored_environments.yml")
+  end
+
+  def load_ignored_file
+    File.exist?(ignored_file_path) ? YAML.load_file(ignored_file_path) : { }
+  end
+
   def ignored_file
-    return @ignored_file if @ignored_file
-    file          = File.join(Rails.root.to_s, "config", "ignored_environments.yml")
-    @ignored_file = File.exist?(file) ? YAML.load_file(file) : { }
+    @ignored_file ||= load_ignored_file
   rescue => e
     logger.warn "Failed to parse environment ignore file: #{e}"
     @ignored_file = { }
