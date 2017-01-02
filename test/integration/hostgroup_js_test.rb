@@ -42,18 +42,16 @@ class HostgroupJSTest < IntegrationTestWithJavascript
         visit edit_hostgroup_path(@hostgroup)
       end
 
-      describe 'Host Group tab' do
+      describe 'Puppet classes tab' do
         test 'it shows a warning' do
-          click_link 'Hostgroup'
+          click_link 'Puppet Classes'
           wait_for_ajax
 
           assert page.has_selector?('#puppetclasses_unavaliable_warning')
         end
-      end
 
-      describe 'Puppet classes tab' do
         test 'it marks selected classes as unavailable' do
-          page.find('#puppetclasses_unavaliable_warning').click_link 'Puppet Classes'
+          click_link 'Puppet Classes'
           wait_for_ajax
 
           assert page.has_selector?('.selected_puppetclass.unavailable')
