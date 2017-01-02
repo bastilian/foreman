@@ -539,6 +539,24 @@ class HostJSTest < IntegrationTestWithJavascript
     end
   end
 
+  describe 'Puppet Classes tab' do
+    context 'has inherited Puppetclasses' do
+      setup do
+        @hostgroup = FactoryGirl.create(:hostgroup, :with_puppetclass)
+        @host = FactoryGirl.create(:host, hostgroup: @hostgroup, environment: @hostgroup.environment)
+      end
+
+      test 'it mentions the hostgroup by name in the tooltip' do
+        visit edit_host_path(@host)
+        page.find(:link, 'Puppet Classes', href: '#puppet_klasses').click
+
+        class_element = page.find('#inherited_ids>li')
+        assert_equal @hostgroup.puppetclasses.first.name, class_element.text
+        assert_equal "Already included from #{@hostgroup.name}", class_element['data-original-title']
+      end
+    end
+  end
+
   private
 
   def subnet_and_domain_are_selected(modal, domain)

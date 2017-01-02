@@ -65,6 +65,24 @@ class HostgroupJSTest < IntegrationTestWithJavascript
     assert page.has_selector?("#inherited_parameters #name_x")
   end
 
+  describe 'Puppet Classes tab' do
+    context 'has inherited Puppetclasses' do
+      setup do
+        @hostgroup = FactoryGirl.create(:hostgroup, :with_puppetclass)
+        @child_hostgroup = FactoryGirl.create(:hostgroup, parent: @hostgroup)
+      end
+
+      test 'it mentions the parent hostgroup by name in the tooltip' do
+        visit edit_hostgroup_path(@child_hostgroup)
+        page.find(:link, 'Puppet Classes', href: '#puppet_klasses').click
+        class_element = page.find('#inherited_ids>li')
+
+        assert_equal @hostgroup.puppetclasses.first.name, class_element.text
+        assert_equal "Already included from #{@hostgroup.name}", class_element['data-original-title']
+      end
+    end
+  end
+
   private
 
   def select_from_list(list_id, item)
