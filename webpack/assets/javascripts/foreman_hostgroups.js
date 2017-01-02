@@ -5,7 +5,7 @@ export function checkForUnavailablePuppetclasses() {
   let puppetKlassesTab = $('#puppet_klasses');
 
   if (unavailableClasses.size() > 0) {
-    let warningMessage = Jed.sprintf(__('Some Puppet Classes are unavailable in the selected environment'));
+    let warningMessage = __('Some Puppet Classes are unavailable in the selected environment');
     let warning = `<div class="alert alert-warning" id="puppetclasses_unavaliable_warning">
         <span class="pficon pficon-warning-triangle-o"></span>
         ${warningMessage}
