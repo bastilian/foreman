@@ -2,26 +2,23 @@ import $ from 'jquery';
 
 export function checkForUnavailablePuppetclasses() {
   let unavailableClasses = $('#puppet_klasses #selected_classes .unavailable');
-  let helpBlock = $('#puppet_klasses').closest('form')
-                     .find('#hostgroup_environment_id')
-                     .closest('.form-group').find('div+.help-block');
+  let puppetKlassesTab = $('#puppet_klasses');
 
   if (unavailableClasses.size() > 0) {
-    let warningMessage = Jed.sprintf(__('Some %s are unavailable in the selected environment'),
-                              '<a href="#puppet_klasses">Puppet Classes</a>');
-    let warning = `<span id="puppetclasses_unavaliable_warning">
+    let warningMessage = Jed.sprintf(__('Some Puppet Classes are unavailable in the selected environment'));
+    let warning = `<div class="alert alert-warning" id="puppetclasses_unavaliable_warning">
         <span class="pficon pficon-warning-triangle-o"></span>
         ${warningMessage}
       </span>`;
 
-    helpBlock.append(warning).find('a').on('click', function (event) {
+    puppetKlassesTab.prepend(warning).find('a').on('click', function (event) {
       event.preventDefault();
       let tab = $(event.target).closest('form').find('.nav-tabs a[href="#puppet_klasses"]');
 
       tab.tab('show');
     });
   } else {
-    helpBlock.find('#puppetclasses_unavaliable_warning').remove();
+    puppetKlassesTab.find('#puppetclasses_unavaliable_warning').remove();
   }
 }
 

@@ -33,7 +33,7 @@ describe('checkForUnavailablePuppetclasses', () => {
     $('#selected_classes').append('<li class="unavailable">Unavailable Class</li>');
 
     hostgroups.checkForUnavailablePuppetclasses();
-    expect($('#hostgroup .help-block').first().children().size()).toBe(1);
+    expect($('#puppetclasses_unavaliable_warning').size()).toBe(1);
   });
 
   it('does not add a warning if no unavailable classes are found', () => {
