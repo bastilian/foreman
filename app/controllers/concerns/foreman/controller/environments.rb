@@ -10,9 +10,6 @@ module Foreman::Controller::Environments
       @importer = PuppetClassImporter.new(opts)
       @changed  = @importer.changes
 
-      if @importer.ignored_boolean_environment_names?
-        warning(_("Ignored environment names resulting in booleans found. Please quote strings in config/ignored_environments.yml"))
-      end
     rescue => e
       if e.message =~ /puppet feature/i
         error _("No smart proxy was found to import environments from, ensure that at least one smart proxy is registered with the 'puppet' feature.")
@@ -20,6 +17,10 @@ module Foreman::Controller::Environments
       else
         raise e
       end
+    end
+
+    if @importer.ignored_boolean_environment_names?
+      warning(_("Ignored environment names resulting in booleans found. Please quote strings in config/ignored_environments.yml"))
     end
 
     if @changed["new"].size > 0 || @changed["obsolete"].size > 0 || @changed["updated"].size > 0

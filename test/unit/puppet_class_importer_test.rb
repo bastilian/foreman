@@ -138,12 +138,12 @@ class PuppetClassImporterTest < ActiveSupport::TestCase
     end
 
     test 'is true when an environment name is resulting in "true"' do
-      @importer.stubs(:ignored_environments).returns(['true', 'test', 'another'])
+      @importer.stubs(:ignored_environments).returns([true, 'test', 'another'])
       assert @importer.ignored_boolean_environment_names?
     end
 
     test 'is true when an environment name is resulting in "false"' do
-      @importer.stubs(:ignored_environments).returns(['false', 'test'])
+      @importer.stubs(:ignored_environments).returns([false, 'test'])
       assert @importer.ignored_boolean_environment_names?
     end
   end

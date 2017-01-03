@@ -206,7 +206,7 @@ class PuppetClassImporter
   end
 
   def ignored_boolean_environment_names?
-    (ignored_environments & ['true', 'false']).any?
+    (ignored_environments & [true, false]).any?
   end
 
   private
