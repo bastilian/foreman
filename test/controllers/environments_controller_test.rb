@@ -180,10 +180,10 @@ class EnvironmentsControllerTest < ActionController::TestCase
 
   test 'it adds a warning when boolean keys are found' do
    setup_import_classes
-   PuppetClassImporter.any_instance.stubs(:ignored_environments).returns(['true'])
+   PuppetClassImporter.any_instance.stubs(:ignored_environments).returns([true])
 
    get :import_environments, {:proxy => smart_proxies(:puppetmaster)}, set_session_user
-   assert_equal "Ignored environment names resulting in booleans found. Please quote strings in config/ignored_environments.yml", flash[:warning]
+   assert_equal "Ignored environment names resulting in booleans found. Please quote strings like true/false and yes/no in config/ignored_environments.yml.", flash[:warning]
   end
 
   def setup_user
