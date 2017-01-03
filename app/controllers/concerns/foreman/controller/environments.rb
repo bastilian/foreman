@@ -20,7 +20,7 @@ module Foreman::Controller::Environments
     end
 
     if @importer.ignored_boolean_environment_names?
-      warning(_("Ignored environment names resulting in booleans found. Please quote strings in config/ignored_environments.yml"))
+      warning(_("Ignored environment names resulting in booleans found. Please quote strings like true/false and yes/no in config/ignored_environments.yml."))
     end
 
     if @changed["new"].size > 0 || @changed["obsolete"].size > 0 || @changed["updated"].size > 0
