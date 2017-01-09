@@ -206,7 +206,7 @@ class PuppetClassImporter
   end
 
   def ignored_boolean_environment_names?
-    (ignored_environments & [true, false]).map(&:to_s).any?
+    ignored_environments.any? { |item| item.is_a?(TrueClass) || item.is_a?(FalseClass) }
   end
 
   private
