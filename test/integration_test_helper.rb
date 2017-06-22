@@ -4,27 +4,45 @@ require 'rails/test_help'
 require 'mocha/mini_test'
 require 'capybara/rails'
 require 'factory_girl_rails'
-require 'capybara/poltergeist'
 require 'show_me_the_cookies'
 require 'database_cleaner'
 require 'active_support_test_case_helper'
 require 'minitest-optional_retry'
 
-Capybara.register_driver :poltergeist do |app|
-  opts = {
-    # To enable debugging uncomment `:inspector => true` and
-    # add `page.driver.debug` in code to open webkit inspector
-    # :inspector => true
-    :js_errors => true,
-    :timeout => 60,
-    :extensions => ["#{Rails.root}/test/integration/support/poltergeist_onload_extensions.js"],
-    :phantomjs => File.join(Rails.root, 'node_modules', '.bin', 'phantomjs')
-  }
-  Capybara::Poltergeist::Driver.new(app, opts)
+#Capybara.register_driver :poltergeist do |app|
+  #opts = {
+    ## To enable debugging uncomment `:inspector => true` and
+    ## add `page.driver.debug` in code to open webkit inspector
+    ## :inspector => true
+    #:js_errors => true,
+    #:timeout => 60,
+    #:extensions => ["#{Rails.root}/test/integration/support/poltergeist_onload_extensions.js"],
+    #:phantomjs => File.join(Rails.root, 'node_modules', '.bin', 'phantomjs')
+  #}
+  #Capybara::Poltergeist::Driver.new(app, opts)
+#end
+
+#Capybara.default_max_wait_time = 30
+#Capybara.javascript_driver = :poltergeist
+
+require "selenium/webdriver"
+
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, :browser => :chrome)
 end
 
-Capybara.default_max_wait_time = 30
-Capybara.javascript_driver = :poltergeist
+Capybara.register_driver :headless_chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w(headless disable-gpu) }
+  )
+
+  Capybara::Selenium::Driver.new app,
+    browser: :chrome,
+    desired_capabilities: capabilities
+end
+
+Capybara.javascript_driver = :chrome
+ShowMeTheCookies.register_adapter(:chrome, ShowMeTheCookies::Selenium)
 
 class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
@@ -127,6 +145,7 @@ class ActionDispatch::IntegrationTest
 
   def set_request_user(user)
     user = users(user) unless user.is_a?(User)
+    visit '/'
     create_cookie('test_user', user.login)
   end
 
