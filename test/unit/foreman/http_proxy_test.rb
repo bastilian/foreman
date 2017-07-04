@@ -63,6 +63,17 @@ class HTTPProxyTest < ActiveSupport::TestCase
       test 'when the schema is "unix"' do
         refute adapter.proxy_http_request?(nil, request_host, 'unix')
       end
+
+      test 'when settings are nil' do
+        adapter.unstub(:http_proxy)
+        adapter.unstub(:http_proxy_except_list)
+        Setting::General.stubs(:find_by_name)
+                         .with('http_proxy').returns(nil)
+        Setting::General.stubs(:find_by_name)
+                         .with('http_proxy_except_list')
+                         .returns(nil)
+        refute adapter.proxy_http_request?(nil, request_host, schema)
+      end
     end
   end
 

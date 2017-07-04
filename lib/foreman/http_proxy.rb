@@ -1,11 +1,11 @@
 module Foreman
   module HTTPProxy
     def http_proxy
-      Setting::General.find_by_name('http_proxy').value
+      Setting::General.find_by_name('http_proxy').try(:value)
     end
 
     def http_proxy_except_list
-      Setting::General.find_by_name('http_proxy_except_list').value
+      Setting::General.find_by_name('http_proxy_except_list').try(:value)
     end
 
     def proxy_http_request?(current_proxy, request_host, schema)
@@ -26,10 +26,10 @@ module Foreman
     end
 
     def http_host_excepted_by_wildcard?(host)
-      http_proxy_except_list.collect do |value|
+      http_proxy_except_list.map do |value|
         return unless value.include? '*'
         host.match(/#{value.gsub('*', '')}/)
-      end.any?
+      end.compact.any?
     end
 
     def http_host_excepted?(host)
