@@ -130,7 +130,6 @@ class HTTPProxyTest < ActiveSupport::TestCase
 
     test 'sets @proxy for request' do
       net_http_object = rest_client_request.net_http_object(request_host, 8080)
-      puts net_http_object.instance_variables.inspect
       assert_equal URI.parse(http_proxy).hostname,
                    net_http_object.instance_variable_get(:@proxy_address)
     end
