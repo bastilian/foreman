@@ -1,16 +1,16 @@
 module Foreman
   module HTTPProxy
     def http_proxy
-      Setting::General.find_by_name('http_proxy').try(:value)
+      Setting[:http_proxy]
     end
 
     def http_proxy_except_list
-      Setting::General.find_by_name('http_proxy_except_list').try(:value)
+      Setting[:http_proxy_except_list]
     end
 
     def proxy_http_request?(current_proxy, request_host, schema)
       !http_proxy.nil? && current_proxy.nil? && !request_host.nil? &&
-      schema != 'unix' &&
+      ['http', 'https'].include?(schema) &&
       !http_host_excepted?(request_host) &&
       !http_host_excepted_by_wildcard?(request_host)
     end
@@ -40,3 +40,4 @@ end
 
 require_dependency File.expand_path('../http_proxy/excon_connection_extension', __FILE__)
 require_dependency File.expand_path('../http_proxy/net_http_extension', __FILE__)
+require_dependency File.expand_path('../http_proxy/rest_client_extension', __FILE__)
