@@ -109,4 +109,30 @@ class HTTPProxyTest < ActiveSupport::TestCase
                    net_http.instance_variable_get(:@proxy_address)
     end
   end
+
+  describe 'RestClient::Resource extension' do
+    let(:rest_client_request) { RestClient::Request.new(url: request_host, method: 'get') }
+
+    setup do
+      rest_client_request.stubs(:http_proxy).returns(http_proxy)
+      rest_client_request.stubs(:orig_proxy_uri).returns(true)
+      rest_client_request.stubs(:proxy_http_request?).returns(true)
+    end
+
+    test 'has orig_proxy_uri' do
+      assert rest_client_request.respond_to?(:orig_proxy_uri)
+    end
+
+    test 'proxy_uri returns proxy' do
+      assert_equal URI.parse(http_proxy),
+                   rest_client_request.proxy_uri
+    end
+
+    test 'sets @proxy for request' do
+      net_http_object = rest_client_request.net_http_object(request_host, 8080)
+      puts net_http_object.instance_variables.inspect
+      assert_equal URI.parse(http_proxy).hostname,
+                   net_http_object.instance_variable_get(:@proxy_address)
+    end
+  end
 end
