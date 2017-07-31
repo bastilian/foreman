@@ -10,12 +10,20 @@ module Foreman
 
     def proxy_http_request?(current_proxy, request_host, schema)
       !http_proxy.nil? && current_proxy.nil? && !request_host.nil? &&
-      ['http', 'https'].include?(schema) &&
-      !http_host_excepted?(request_host) &&
-      !http_host_excepted_by_wildcard?(request_host)
+      http_request?(schema) &&
+      http_proxy_host?(request_host)
     end
 
     private
+
+    def http_request?(schema)
+      ['http', 'https'].include?(schema)
+    end
+
+    def http_proxy_host?(request_host)
+      !http_host_excepted?(request_host) &&
+      !http_host_excepted_by_wildcard?(request_host)
+    end
 
     def logger
       Foreman::Logging.logger('app')
