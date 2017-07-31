@@ -1,5 +1,7 @@
 require 'facter'
 class Setting::General < Setting
+  include UrlValidator
+
   def self.default_settings
     protocol = SETTINGS[:require_ssl] ? 'https' : 'http'
     domain = SETTINGS[:domain]
@@ -36,5 +38,11 @@ class Setting::General < Setting
 
   def self.humanized_category
     N_('General')
+  end
+
+  def validate_http_proxy(record)
+    if !record.value.nil? && !is_http_url?(record.value)
+      record.errors[:base] << _("Not a valid URL for a HTTP proxy")
+    end
   end
 end
