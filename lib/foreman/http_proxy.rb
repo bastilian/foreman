@@ -14,6 +14,12 @@ module Foreman
       http_proxy_host?(request_host)
     end
 
+    def http_proxied_rescue(&block)
+      yield
+    rescue
+      raise $!, _("Proxied request failed with: %s") % $!, $!.backtrace
+    end
+
     private
 
     def http_request?(schema)

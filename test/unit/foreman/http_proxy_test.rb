@@ -92,6 +92,14 @@ class HTTPProxyTest < ActiveSupport::TestCase
       assert_equal http_proxy,
                    excon_connection.instance_variable_get(:@data)[:proxy]
     end
+
+    test 'rescues requests and mentions proxy' do
+      excon_connection.unstub(:orig_request)
+      excon_connection.stubs(:orig_request).raises(Excon::Error::Socket)
+      assert_raises_with_message Excon::Error::Socket, "Proxied request" do
+        excon_connection.request({})
+      end
+    end
   end
 
   describe 'Net::HTTP extension' do
@@ -107,6 +115,14 @@ class HTTPProxyTest < ActiveSupport::TestCase
       net_http.request({})
       assert_equal URI.parse(http_proxy),
                    net_http.instance_variable_get(:@proxy_address)
+    end
+
+    test 'rescues requests and mentions proxy' do
+      net_http.unstub(:orig_request)
+      net_http.stubs(:orig_request).raises(StandardError.new)
+      assert_raises_with_message StandardError.new, "Proxied request" do
+        net_http.request({})
+      end
     end
   end
 
