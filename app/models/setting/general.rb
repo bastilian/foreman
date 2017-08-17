@@ -41,7 +41,7 @@ class Setting::General < Setting
   end
 
   def validate_http_proxy(record)
-    if !record.value.nil? && !is_http_url?(record.value)
+    if !record.value.blank? && !is_http_url?(record.value)
       record.errors[:base] << _("Not a valid URL for a HTTP proxy")
     end
   end
