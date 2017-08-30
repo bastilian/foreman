@@ -521,6 +521,19 @@ module ApplicationHelper
     end
   end
 
+  def flash_notifiations
+    flash.select { |key| key != :inline }
+  end
+
+  def flash_inline
+    flash['inline'] || {}
+  end
+
+  def alert_class(type)
+    type = :danger if type == :error
+    "alert-#{type}"
+  end
+
   def current_url_params(permitted: [])
     params.permit(permitted + [:locale, :search, :per_page])
   end
