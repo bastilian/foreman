@@ -4,6 +4,7 @@ import PowerStatus from '../components/hosts/powerStatus/';
 import NotificationContainer from '../components/notifications/';
 import ToastsList from '../components/toastNotifications/';
 import PieChart from '../components/common/charts/PieChart/';
+import PasswordInput from '../components/common/forms/PasswordInput';
 import StorageContainer from '../components/hosts/storage/vmware/';
 import ReactDOM from 'react-dom';
 import store from '../redux';
@@ -33,6 +34,10 @@ export function mount(component, selector, data) {
     StorageContainer: {
       type: StorageContainer,
       markup: <StorageContainer store={store} data={data} />
+    },
+    PasswordInput: {
+      type: PasswordInput,
+      markup: <PasswordInput label={data.label} className={data.class}  placeholder={data.placeholder} options={data.options} />
     }
   };
 

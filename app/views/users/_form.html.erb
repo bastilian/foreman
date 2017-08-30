@@ -41,6 +41,9 @@
         <% if User.current == @user  %>
           <%= password_f f, :current_password, :label => _('Current password'), :placeholder => '' %>
         <% end %>
+        <span id='user_password_react'></span>
+        <%= mount_react_component('PasswordInput', '#user_password_react', :label => _('Password'), :placeholder => 'SSSS')%>
+
         <%= password_f f, :password, :label => _('Password'), :error => @user.errors[:password_hash] %>
         <%= password_f f, :password_confirmation, :label => _('Verify') %>
       </div>
