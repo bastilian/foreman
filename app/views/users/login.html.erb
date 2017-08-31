@@ -6,10 +6,10 @@
         <%= image_tag("login_logo.png") %>
       </div><!--/#brand-->
     </div>
-    <% if flash_inline.inspect %>
+    <% if flash_inline.any? %>
       <div class="col-sm-12">
         <% flash_inline.each do |type, message| %>
-          <div class="alert <%= alert_class type %>">
+          <div class="alert <%= alert_class(type) %>">
             <% header = _('Success!') if type == :success %>
             <%= alert_header(header || "", alert_class(type)) %>
             <%= message %>

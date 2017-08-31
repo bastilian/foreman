@@ -521,10 +521,6 @@ module ApplicationHelper
     end
   end
 
-  def flash_notifiations
-    flash.select { |key| key != :inline }
-  end
-
   def flash_inline
     flash['inline'] || {}
   end
