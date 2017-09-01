@@ -516,9 +516,13 @@ module ApplicationHelper
   end
 
   def notifications
-    content_tag :div, :id => 'notifications', :'data-flash' => flash.to_json.html_safe do
+    content_tag :div, :id => 'notifications', :'data-flash' => flash_notifiations.to_json.html_safe do
       mount_react_component('ToastNotifications', '#notifications')
     end
+  end
+
+  def flash_notifiations
+    flash.select { |key, _| key != 'inline' }
   end
 
   def flash_inline
