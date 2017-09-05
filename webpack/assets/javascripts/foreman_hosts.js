@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import 'babel-polyfill';
 
 let pluginEditAttributes = {
   architecture: [],
