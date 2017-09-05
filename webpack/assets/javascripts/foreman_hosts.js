@@ -110,15 +110,15 @@ export function checkPXELoaderCompatibility(osTitle, pxeLoader) {
   if (pxeLoader === 'None' || pxeLoader === '') {
     return null;
   }
+  let compatible = null;
+
   osTitle = osTitle.toLowerCase();
-
   _.forEach(_.values(pxeCompatibility), (check) => {
-    let compatible = check.isCompatible(osTitle, pxeLoader);
+    let compatibleCheck = check.isCompatible(osTitle, pxeLoader);
 
-    if (compatible != null) {
-      return compatible;
+    if (compatibleCheck != null) {
+      compatible = compatibleCheck;
     }
-    return null;
   });
-  return null;
+  return compatible;
 }
