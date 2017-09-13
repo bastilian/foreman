@@ -3,6 +3,11 @@
       <label class="btn btn-default btn-sm active" onclick="tfm.editor.setCode()">
         <input type="radio" name="options" id="option1" ><%= _("Input") %>
       </label>
+      <% if show_import %>
+        <label class="btn btn-default btn-sm" onclick="tfm.editor.showImporter()">
+          <input type="radio" name="options" id="option4" ><%= _("Import from File") %>
+        </label>
+      <% end %>
       <label class="btn btn-default btn-sm" onclick="tfm.editor.setPreview()">
         <input type="radio" name="options" id="option2" ><%= _("Diff") %>
       </label>
@@ -40,4 +45,8 @@
         <%= select_tag('keybinding', content_tag(:optgroup, options_for_select([_('Default'), 'Vim', 'Emacs']), :label => _('Key Binding')), :class => 'form-control input-sm without_select2') %>
       </li>
     </ul>
+
+    <% if show_import %>
+      <%= file_field_tag :import_file, :class => "hidden editor_file_source", :id => 'import_file' %>
+    <% end %>
 </div>
