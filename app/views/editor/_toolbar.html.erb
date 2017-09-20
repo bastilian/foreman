@@ -1,13 +1,15 @@
 <div class="navbar navbar-form navbar-full-width navbar-editor">
+
+    <% if show_import %>
+      <a class="btn btn-default btn-sm" onclick="tfm.editor.showImporter()">
+        <%= _("Import") %>
+      </a>
+    <% end %>
+
     <div class="btn-group" data-toggle="buttons" >
       <label class="btn btn-default btn-sm active" onclick="tfm.editor.setCode()">
         <input type="radio" name="options" id="option1" ><%= _("Input") %>
       </label>
-      <% if show_import %>
-        <label class="btn btn-default btn-sm" onclick="tfm.editor.showImporter()">
-          <input type="radio" name="options" id="option4" ><%= _("Import from File") %>
-        </label>
-      <% end %>
       <label class="btn btn-default btn-sm" onclick="tfm.editor.setPreview()">
         <input type="radio" name="options" id="option2" ><%= _("Diff") %>
       </label>
@@ -29,11 +31,11 @@
     <% end %>
 
     <a class="btn btn-default btn-sm btn-fullscreen" href="#" onclick="tfm.editor.enterFullscreen('.editor-container');">
-      <i class="glyphicon glyphicon-resize-full"></i>
+      <%= _('Fullscreen') %>
     </a>
 
     <a class="btn btn-default btn-sm btn-exit-fullscreen hidden" href="#" onclick="tfm.editor.exitFullscreen();">
-      <i class="glyphicon glyphicon-resize-small"></i>
+      <%= _('Exit Fullscreen') %>
     </a>
 
     <ul class="nav navbar-nav navbar-right navbar-editor">
