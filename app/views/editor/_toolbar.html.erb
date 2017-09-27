@@ -1,11 +1,5 @@
 <div class="navbar navbar-form navbar-full-width navbar-editor">
 
-    <% if show_import %>
-      <a class="btn btn-default btn-sm" onclick="tfm.editor.showImporter()">
-        <%= _("Import") %>
-      </a>
-    <% end %>
-
     <div class="btn-group" data-toggle="buttons" >
       <label class="btn btn-default btn-sm active" onclick="tfm.editor.setCode()">
         <input type="radio" name="options" id="option1" ><%= _("Input") %>
@@ -19,6 +13,12 @@
         </label>
       <% end %>
     </div>
+
+    <% if show_import %>
+      <a class="btn btn-default btn-sm" onclick="tfm.editor.showImporter()">
+        <%= _("Import") %>
+      </a>
+    <% end %>
 
     <% if show_preview %>
       <%= javascript_tag("$(document).on('ContentLoad', function() { tfm.tools.initTypeAheadSelect($('#preview_host_id')) });"); %>
