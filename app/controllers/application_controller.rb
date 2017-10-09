@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
   end
 
   def api_request?
-    false
+    request.format.try(:json?) || request.format.try(:yaml?)
   end
 
   # this method is returns the active user which gets used to populate the audits table
@@ -186,6 +186,7 @@ class ApplicationController < ActionController::Base
   end
 
   def inline_flash_message(type, message)
+    flash[:inline] ||= {}
     flash[:inline][type] = CGI.escapeHTML(message)
   end
 

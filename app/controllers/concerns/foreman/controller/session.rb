@@ -30,22 +30,15 @@ module Foreman::Controller::Session
   end
 
   def expire_session
-    logger.info "Session for #{User.current} is expired. aa"
-    logger.info flash.inspect
     backup_session_content { reset_session }
-    logger.info "I came this far!"
     if api_request?
       render :plain => '', :status => 401
     else
       sso = get_sso_method
       if sso.nil? || !sso.support_expiration?
-        logger.info "Setting flash"
-        warning _("Your session has expired, please login again")
         inline_warning _("Your session has expired, please login again")
-        logger.info flash.inspect
         redirect_to main_app.login_users_path
       else
-        logger.info "How did i end up here?"
         redirect_to sso.expiration_url
       end
     end
