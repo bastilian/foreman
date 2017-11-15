@@ -30,6 +30,7 @@ module Foreman::Controller::Session
   end
 
   def expire_session
+    logger.info "Session for #{User.current} is expired."
     backup_session_content { reset_session }
     if api_request?
       render :plain => '', :status => 401
