@@ -25,6 +25,10 @@ class ReportImporter
     @report_scanner = (report_scanner + [scanner]).flatten.uniq
   end
 
+  def self.unregister_report_scanner(scanner)
+    @report_scanner -= [scanner]
+  end
+
   def self.import(raw, proxy_id = nil)
     importer = new(raw, proxy_id)
     importer.import

@@ -145,6 +145,15 @@ class ReportImporterTest < ActiveSupport::TestCase
       end
     end
 
+    describe '.unregister_report_scanner' do
+      it 'adds a class to report_scanner' do
+        TestReportImporter.register_report_scanner report_scanner
+        assert TestReportImporter.report_scanner.include? report_scanner
+        TestReportImporter.unregister_report_scanner report_scanner
+        refute TestReportImporter.report_scanner.include? report_scanner
+      end
+    end
+
     describe '.scan' do
       let(:importer) { TestReportImporter.new(report) }
       setup do
@@ -156,6 +165,10 @@ class ReportImporterTest < ActiveSupport::TestCase
         report_scanner.expects(:scan)
         importer.send(:scan)
       end
+    end
+
+    teardown do
+      TestReportImporter.unregister_report_scanner report_scanner
     end
   end
 end
