@@ -1,6 +1,8 @@
+require_relative './report_scanner/puppet_report_scanner'
+
 class ReportImporter
   delegate :logger, :to => :Rails
-  attr_reader :report
+  attr_reader :report, :report_scanner
 
   # When writing your own Report importer, provide feature(s) of authorized Smart Proxies
   def self.authorized_smart_proxy_features
@@ -13,6 +15,14 @@ class ReportImporter
 
   def self.unregister_smart_proxy_feature(feature)
     @authorized_smart_proxy_features -= [ feature ]
+  end
+
+  def self.report_scanner
+    @report_scanner ||= []
+  end
+
+  def self.register_report_scanner(scanner)
+    @report_scanner = (report_scanner + [scanner]).flatten.uniq
   end
 
   def self.import(raw, proxy_id = nil)
@@ -36,12 +46,22 @@ class ReportImporter
     start_time = Time.now
     logger.debug { "Processing report: #{raw.inspect}" }
     create_report_and_logs
+    scan
     if report.persisted?
       imported_time = Time.now
       host.refresh_statuses(statuses_for_refresh)
       refreshed_time = Time.now
       logger.info("Imported report for #{name} in #{(imported_time - start_time).round(2)} seconds, status refreshed in #{(refreshed_time - imported_time).round(2)} seconds")
     end
+  end
+
+  def scan
+    logger.info "Scanning report with: #{self.class.report_scanner.join(', ')}"
+    self.class.report_scanner.each do |scanner|
+      scanner.scan(report)
+      logger.debug "Changes after #{scanner}: #{report.changes.inspect}"
+    end
+    report.save
   end
 
   private

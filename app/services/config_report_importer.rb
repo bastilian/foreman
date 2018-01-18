@@ -1,4 +1,13 @@
 class ConfigReportImporter < ReportImporter
+  DEFAULT_REPORT_SCANNER = [
+    ::Foreman::PuppetReportScanner
+  ].freeze
+
+  def initialize(*args)
+    super(*args)
+    self.class.register_report_scanner DEFAULT_REPORT_SCANNER
+  end
+
   def self.authorized_smart_proxy_features
     @authorized_smart_proxy_features ||= super + ['Puppet']
   end

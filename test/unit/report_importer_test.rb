@@ -132,6 +132,32 @@ class ReportImporterTest < ActiveSupport::TestCase
     reporter.send(:host).expects(:refresh_statuses).with([])
     reporter.import
   end
+
+  describe 'Report scanning' do
+    let(:report_scanner) { stub_everything('TestReportScanner') }
+    let(:report) { read_json_fixture('reports/empty.json') }
+
+    describe '.register_report_scanner' do
+      it 'adds a class to report_scanner' do
+        refute TestReportImporter.report_scanner.include? report_scanner
+        TestReportImporter.register_report_scanner report_scanner
+        assert TestReportImporter.report_scanner.include? report_scanner
+      end
+    end
+
+    describe '.scan' do
+      let(:importer) { TestReportImporter.new(report) }
+      setup do
+        TestReportImporter.register_report_scanner report_scanner
+        importer.send(:create_report_and_logs)
+      end
+
+      it 'calls scan with the report on scanner' do
+        report_scanner.expects(:scan)
+        importer.send(:scan)
+      end
+    end
+  end
 end
 
 class TestReportImporter < ReportImporter
